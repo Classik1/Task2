@@ -1,6 +1,7 @@
 package com.example.weatherapp
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -41,6 +42,7 @@ fun WeatherApp(viewModel: WeatherViewModel) {
 
     val weather by viewModel.weather.collectAsState()
     val loading by viewModel.loading.collectAsState()
+    val error by viewModel.error.collectAsState()
 
     LaunchedEffect(city) {
         viewModel.loadWeather(city)
@@ -54,116 +56,144 @@ fun WeatherApp(viewModel: WeatherViewModel) {
         citySuggestions.filter { it.contains(searchQuery, true) }.take(5)
     }
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(gradient)
-            .statusBarsPadding()
-            .navigationBarsPadding()
-            .padding(16.dp)
     ) {
-
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .animateContentSize(tween(300)),
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxSize()
+                .statusBarsPadding()
+                .navigationBarsPadding()
+                .padding(16.dp)
         ) {
-            if (isSearching) {
-                TextField(
-                    value = searchQuery,
-                    onValueChange = { searchQuery = it },
-                    modifier = Modifier.weight(1f),
-                    placeholder = { Text("Введите город") },
-                    singleLine = true,
-                    shape = RoundedCornerShape(16.dp),
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color.White.copy(0.2f),
-                        unfocusedContainerColor = Color.White.copy(0.1f),
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        cursorColor = Color.White
-                    ),
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                    keyboardActions = KeyboardActions(
-                        onSearch = {
-                            if (searchQuery.isNotBlank()) {
-                                city = searchQuery
-                                searchQuery = ""
-                                isSearching = false
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .animateContentSize(tween(300)),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (isSearching) {
+                    TextField(
+                        value = searchQuery,
+                        onValueChange = { searchQuery = it },
+                        modifier = Modifier.weight(1f),
+                        placeholder = { Text("Введите город") },
+                        singleLine = true,
+                        shape = RoundedCornerShape(16.dp),
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.White.copy(0.2f),
+                            unfocusedContainerColor = Color.White.copy(0.1f),
+                            focusedTextColor = Color.White,
+                            unfocusedTextColor = Color.White,
+                            cursorColor = Color.White
+                        ),
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                        keyboardActions = KeyboardActions(
+                            onSearch = {
+                                if (searchQuery.isNotBlank()) {
+                                    city = searchQuery
+                                    searchQuery = ""
+                                    isSearching = false
+                                }
+                            }
+                        ),
+                        trailingIcon = {
+                            IconButton(onClick = {
+                                if (searchQuery.isNotBlank()) {
+                                    city = searchQuery
+                                    searchQuery = ""
+                                    isSearching = false
+                                }
+                            }) {
+                                Icon(Icons.Default.Search, null, tint = Color.White)
                             }
                         }
-                    ),
-                    trailingIcon = {
-                        IconButton(onClick = {
-                            if (searchQuery.isNotBlank()) {
-                                city = searchQuery
-                                searchQuery = ""
-                                isSearching = false
-                            }
-                        }) {
-                            Icon(Icons.Default.Search, null, tint = Color.White)
-                        }
-                    }
-                )
-
-                Spacer(Modifier.width(8.dp))
-
-                Text(
-                    "Отмена",
-                    color = Color.White,
-                    modifier = Modifier.clickable {
-                        isSearching = false
-                        searchQuery = ""
-                    }
-                )
-
-            } else {
-                Text(city, fontSize = 20.sp, color = Color.White, modifier = Modifier.weight(1f))
-                IconButton(onClick = { isSearching = true }) {
-                    Icon(Icons.Default.Search, null, tint = Color.White)
-                }
-            }
-        }
-        if (isSearching && suggestions.isNotEmpty()) {
-            Spacer(Modifier.height(8.dp))
-            LazyColumn {
-                items(suggestions) { suggestion ->
-                    Text(
-                        suggestion,
-                        color = Color.White,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                city = suggestion
-                                searchQuery = ""
-                                isSearching = false
-                            }
-                            .padding(12.dp)
                     )
+
+                    Spacer(Modifier.width(8.dp))
+
+                    Text(
+                        "Отмена",
+                        color = Color.White,
+                        modifier = Modifier.clickable {
+                            isSearching = false
+                            searchQuery = ""
+                        }
+                    )
+
+                } else {
+                    Text(city, fontSize = 20.sp, color = Color.White, modifier = Modifier.weight(1f))
+                    IconButton(onClick = { isSearching = true }) {
+                        Icon(Icons.Default.Search, null, tint = Color.White)
+                    }
                 }
             }
-        }
 
-        Spacer(Modifier.height(20.dp))
+            if (isSearching && suggestions.isNotEmpty()) {
+                Spacer(Modifier.height(8.dp))
+                LazyColumn {
+                    items(suggestions) { suggestion ->
+                        Text(
+                            suggestion,
+                            color = Color.White,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    city = suggestion
+                                    searchQuery = ""
+                                    isSearching = false
+                                }
+                                .padding(12.dp)
+                        )
+                    }
+                }
+            }
 
-        if (loading) {
-            CircularProgressIndicator(color = Color.White)
-        } else {
-            weather?.let { w ->
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(city, fontSize = 28.sp, color = Color.White)
-                    WeatherIcon(w.condition)
-                    Text("${w.temperature}°", fontSize = 96.sp, fontWeight = FontWeight.Light, color = Color.White)
-                    Text(w.condition, color = Color.White.copy(0.8f))
-                    Text("Макс: ${w.maxTemp}°  Мин: ${w.minTemp}°", color = Color.White.copy(0.7f))
-                    Spacer(Modifier.height(8.dp))
-                    Text(getCurrentDate(), color = Color.White.copy(0.6f))
-                    Spacer(Modifier.height(24.dp))
-                    DetailsCard(w)
+            Spacer(Modifier.height(20.dp))
+
+            if (error != null) {
+                Text(
+                    error!!,
+                    color = Color.Red,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+
+            if (loading) {
+                CircularProgressIndicator(color = Color.White)
+            } else {
+                weather?.let { w ->
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(city, fontSize = 28.sp, color = Color.White)
+                        WeatherIcon(w.condition)
+
+                        val animatedTemp by animateFloatAsState(
+                            targetValue = w.temperature.toFloat(),
+                            animationSpec = tween(800)
+                        )
+
+                        Text(
+                            "${animatedTemp.toInt()}°",
+                            fontSize = 96.sp,
+                            fontWeight = FontWeight.Light,
+                            color = Color.White
+                        )
+
+                        Text(w.condition, color = Color.White.copy(0.8f))
+                        Text("Макс: ${w.maxTemp}°  Мин: ${w.minTemp}°", color = Color.White.copy(0.7f))
+
+                        Spacer(Modifier.height(8.dp))
+                        Text(getCurrentDate(), color = Color.White.copy(0.6f))
+
+                        Spacer(Modifier.height(24.dp))
+                        DetailsCard(w)
+                    }
                 }
             }
         }

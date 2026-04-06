@@ -1,5 +1,7 @@
 package com.example.weatherapp
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -17,34 +19,84 @@ fun WeatherIcon(condition: String) {
         condition.contains("cloud", true) -> "☁️"
         condition.contains("clear", true) -> "☀️"
         condition.contains("snow", true) -> "❄️"
+        condition.contains("thunder", true) -> "⛈️"
+        condition.contains("mist", true) -> "🌫️"
         else -> "🌤️"
     }
-    Text(icon, fontSize = 64.sp)
+
+    Text(
+        icon,
+        fontSize = 72.sp,
+        modifier = Modifier.animateContentSize()
+    )
 }
 
 @Composable
 fun DetailsCard(weather: WeatherData) {
     Card(
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White.copy(0.1f))
+        shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White.copy(0.08f)
+        ),
+        elevation = CardDefaults.cardElevation(0.dp),
+        border = BorderStroke(1.dp, Color.White.copy(0.2f))
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+                .padding(16.dp)
         ) {
-            DetailItem("🌡️", "Ощущается", "${weather.feelsLike}°")
-            DetailItem("💧", "Влажность", "${weather.humidity}%")
-            DetailItem("💨", "Ветер", String.format("%.1f м/с", weather.windSpeed))
-            DetailItem("📊", "Давление", String.format("%.1f", weather.pressure))
+
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                DetailItem(
+                    icon = "🌡️",
+                    label = "Ощущается",
+                    value = "${weather.feelsLike}°",
+                    modifier = Modifier.weight(1f)
+                )
+                DetailItem(
+                    icon = "💧",
+                    label = "Влажность",
+                    value = "${weather.humidity}%",
+                    modifier = Modifier.weight(1f)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                DetailItem(
+                    icon = "💨",
+                    label = "Ветер",
+                    value = String.format("%.1f м/с", weather.windSpeed),
+                    modifier = Modifier.weight(1f)
+                )
+                DetailItem(
+                    icon = "📊",
+                    label = "Давление",
+                    value = "${weather.pressure.toInt()} hPa",
+                    modifier = Modifier.weight(1f)
+                )
+            }
         }
     }
 }
 
 @Composable
-fun DetailItem(icon: String, label: String, value: String) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+fun DetailItem(
+    icon: String,
+    label: String,
+    value: String,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Text(icon)
         Text(label, fontSize = 10.sp, color = Color.White.copy(0.6f))
         Text(value, color = Color.White)

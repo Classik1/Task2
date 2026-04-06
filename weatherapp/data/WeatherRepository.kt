@@ -9,6 +9,21 @@ class WeatherRepository(
     private val apiKey: String
 ) {
     suspend fun getWeather(city: String): WeatherData {
+//        val cached = dao.getWeather(city)
+//
+//        if (cached != null && System.currentTimeMillis() - cached.timestamp < 30 * 60 * 1000) {
+//            return WeatherData(
+//                city = cached.city,
+//                temperature = cached.temperature,
+//                condition = cached.condition,
+//                maxTemp = cached.maxTemp,
+//                minTemp = cached.minTemp,
+//                feelsLike = cached.feelsLike,
+//                humidity = cached.humidity,
+//                windSpeed = cached.windSpeed,
+//                pressure = cached.pressure.toDouble()
+//            )
+//        }
         val response = try {
             api.getForecast(apiKey, city)
         } catch (e: Exception) {
