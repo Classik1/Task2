@@ -3,6 +3,7 @@ package com.example.weatherapp.ui
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -18,18 +19,18 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.weatherapp.R
 import com.example.weatherapp.ui.components.DetailsCard
 import com.example.weatherapp.ui.components.WeatherIcon
 import com.example.weatherapp.utils.getCurrentDate
 import com.example.weatherapp.viewmodel.WeatherViewModel
-import java.text.SimpleDateFormat
-import java.util.*
 
 val citySuggestions = listOf(
     "Berlin", "Munich", "Hamburg", "Frankfurt",
@@ -52,19 +53,27 @@ fun WeatherApp(viewModel: WeatherViewModel) {
         viewModel.loadWeather(city)
     }
 
-    val gradient = Brush.verticalGradient(
-        listOf(Color(0xFF4A90E2), Color(0xFF145DA0), Color(0xFF0B2F5B))
-    )
-
     val suggestions = remember(searchQuery) {
         citySuggestions.filter { it.contains(searchQuery, true) }.take(5)
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(gradient)
-    ) {
+    Box(modifier = Modifier.fillMaxSize()) {
+
+        weather?.let { w ->
+            Image(
+                painter = painterResource(getBackground(w.condition)),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.35f))
+            )
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -174,7 +183,8 @@ fun WeatherApp(viewModel: WeatherViewModel) {
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(city, fontSize = 28.sp, color = Color.White)
+                        Text(w.city, fontSize = 28.sp, color = Color.White)
+
                         WeatherIcon(w.condition)
 
                         val animatedTemp by animateFloatAsState(
@@ -190,12 +200,14 @@ fun WeatherApp(viewModel: WeatherViewModel) {
                         )
 
                         Text(w.condition, color = Color.White.copy(0.8f))
-                        Text("Макс: ${w.maxTemp}°  Мин: ${w.minTemp}°", color = Color.White.copy(0.7f))
+                        Text(
+                            "Макс: ${w.maxTemp}°  Мин: ${w.minTemp}°",
+                            color = Color.White.copy(0.7f)
+                        )
 
                         Spacer(Modifier.height(8.dp))
                         Text(getCurrentDate(), color = Color.White.copy(0.6f))
 
-                        Spacer(Modifier.height(24.dp))
                         Spacer(Modifier.height(16.dp))
 
                         LazyRow {
@@ -206,11 +218,15 @@ fun WeatherApp(viewModel: WeatherViewModel) {
                                 ) {
                                     Text(day.date, color = Color.White)
                                     WeatherIcon(day.condition)
-                                    Text("${day.maxTemp}°/${day.minTemp}°", color = Color.White)
+                                    Text(
+                                        "${day.maxTemp}°/${day.minTemp}°",
+                                        color = Color.White
+                                    )
                                 }
                             }
                         }
 
+                        Spacer(Modifier.height(16.dp))
                         DetailsCard(w)
                     }
                 }
@@ -219,3 +235,12 @@ fun WeatherApp(viewModel: WeatherViewModel) {
     }
 }
 
+fun getBackground(condition: String): Int {
+    return when {
+        condition.contains("rain", true) -> R.drawable.rain
+        condition.contains("cloud", true) -> R.drawable.cloud
+        condition.contains("clear", true) -> R.drawable.sunny
+        condition.contains("snow", true) -> R.drawable.snow
+        else -> R.drawable.sunny
+    }
+}
