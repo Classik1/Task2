@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -41,17 +42,19 @@ val citySuggestions = listOf(
 @Composable
 fun WeatherApp(viewModel: WeatherViewModel) {
 
-    var city by remember { mutableStateOf("Berlin") }
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.init(context)
+    }
+
     var searchQuery by remember { mutableStateOf("") }
     var isSearching by remember { mutableStateOf(false) }
 
+    val city by viewModel.city.collectAsState()
     val weather by viewModel.weather.collectAsState()
     val loading by viewModel.loading.collectAsState()
     val error by viewModel.error.collectAsState()
-
-    LaunchedEffect(city) {
-        viewModel.loadWeather(city)
-    }
 
     val suggestions = remember(searchQuery) {
         citySuggestions.filter { it.contains(searchQuery, true) }.take(5)
@@ -88,7 +91,9 @@ fun WeatherApp(viewModel: WeatherViewModel) {
                     .animateContentSize(tween(300)),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+
                 if (isSearching) {
+
                     TextField(
                         value = searchQuery,
                         onValueChange = { searchQuery = it },
@@ -96,34 +101,16 @@ fun WeatherApp(viewModel: WeatherViewModel) {
                         placeholder = { Text("Введите город") },
                         singleLine = true,
                         shape = RoundedCornerShape(16.dp),
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color.White.copy(0.2f),
-                            unfocusedContainerColor = Color.White.copy(0.1f),
-                            focusedTextColor = Color.White,
-                            unfocusedTextColor = Color.White,
-                            cursorColor = Color.White
-                        ),
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                         keyboardActions = KeyboardActions(
                             onSearch = {
                                 if (searchQuery.isNotBlank()) {
-                                    city = searchQuery
+                                    viewModel.searchCity(searchQuery)
                                     searchQuery = ""
                                     isSearching = false
                                 }
                             }
-                        ),
-                        trailingIcon = {
-                            IconButton(onClick = {
-                                if (searchQuery.isNotBlank()) {
-                                    city = searchQuery
-                                    searchQuery = ""
-                                    isSearching = false
-                                }
-                            }) {
-                                Icon(Icons.Default.Search, null, tint = Color.White)
-                            }
-                        }
+                        )
                     )
 
                     Spacer(Modifier.width(8.dp))
@@ -138,7 +125,13 @@ fun WeatherApp(viewModel: WeatherViewModel) {
                     )
 
                 } else {
-                    Text(city, fontSize = 20.sp, color = Color.White, modifier = Modifier.weight(1f))
+                    Text(
+                        city,
+                        fontSize = 20.sp,
+                        color = Color.White,
+                        modifier = Modifier.weight(1f)
+                    )
+
                     IconButton(onClick = { isSearching = true }) {
                         Icon(Icons.Default.Search, null, tint = Color.White)
                     }
@@ -155,7 +148,7 @@ fun WeatherApp(viewModel: WeatherViewModel) {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-                                    city = suggestion
+                                    viewModel.searchCity(suggestion)
                                     searchQuery = ""
                                     isSearching = false
                                 }
@@ -179,10 +172,12 @@ fun WeatherApp(viewModel: WeatherViewModel) {
                 CircularProgressIndicator(color = Color.White)
             } else {
                 weather?.let { w ->
+
                     Column(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+
                         Text(w.city, fontSize = 28.sp, color = Color.White)
 
                         WeatherIcon(w.condition)
@@ -200,12 +195,14 @@ fun WeatherApp(viewModel: WeatherViewModel) {
                         )
 
                         Text(w.condition, color = Color.White.copy(0.8f))
+
                         Text(
                             "Макс: ${w.maxTemp}°  Мин: ${w.minTemp}°",
                             color = Color.White.copy(0.7f)
                         )
 
                         Spacer(Modifier.height(8.dp))
+
                         Text(getCurrentDate(), color = Color.White.copy(0.6f))
 
                         Spacer(Modifier.height(16.dp))
@@ -227,6 +224,7 @@ fun WeatherApp(viewModel: WeatherViewModel) {
                         }
 
                         Spacer(Modifier.height(16.dp))
+
                         DetailsCard(w)
                     }
                 }

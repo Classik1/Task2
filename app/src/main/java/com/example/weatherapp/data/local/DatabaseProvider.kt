@@ -9,6 +9,8 @@ object DatabaseProvider {
             context.applicationContext,
             WeatherDatabase::class.java,
             "weather_db"
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 }
