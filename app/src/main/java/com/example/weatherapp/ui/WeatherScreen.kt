@@ -21,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -42,10 +41,11 @@ val citySuggestions = listOf(
 @Composable
 fun WeatherApp(viewModel: WeatherViewModel) {
 
-    val context = LocalContext.current
+
+
 
     LaunchedEffect(Unit) {
-        viewModel.init(context)
+        viewModel.init()
     }
 
     var searchQuery by remember { mutableStateOf("") }
@@ -73,10 +73,7 @@ fun WeatherApp(viewModel: WeatherViewModel) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.35f))
-            )
-        }
-
+                    .background(Color.Black.copy(alpha = 0.35f))) }
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -91,7 +88,6 @@ fun WeatherApp(viewModel: WeatherViewModel) {
                     .animateContentSize(tween(300)),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 if (isSearching) {
 
                     TextField(
@@ -137,7 +133,6 @@ fun WeatherApp(viewModel: WeatherViewModel) {
                     }
                 }
             }
-
             if (isSearching && suggestions.isNotEmpty()) {
                 Spacer(Modifier.height(8.dp))
                 LazyColumn {
@@ -161,11 +156,9 @@ fun WeatherApp(viewModel: WeatherViewModel) {
             Spacer(Modifier.height(20.dp))
 
             if (error != null) {
-                Text(
-                    error!!,
+                Text(error!!,
                     color = Color.Red,
-                    modifier = Modifier.padding(16.dp)
-                )
+                    modifier = Modifier.padding(16.dp))
             }
 
             if (loading) {
@@ -184,9 +177,7 @@ fun WeatherApp(viewModel: WeatherViewModel) {
 
                         val animatedTemp by animateFloatAsState(
                             targetValue = w.temperature.toFloat(),
-                            animationSpec = tween(800)
-                        )
-
+                            animationSpec = tween(800))
                         Text(
                             "${animatedTemp.toInt()}°",
                             fontSize = 96.sp,
@@ -202,11 +193,8 @@ fun WeatherApp(viewModel: WeatherViewModel) {
                         )
 
                         Spacer(Modifier.height(8.dp))
-
                         Text(getCurrentDate(), color = Color.White.copy(0.6f))
-
                         Spacer(Modifier.height(16.dp))
-
                         LazyRow {
                             items(w.forecast) { day ->
                                 Column(
@@ -222,9 +210,7 @@ fun WeatherApp(viewModel: WeatherViewModel) {
                                 }
                             }
                         }
-
                         Spacer(Modifier.height(16.dp))
-
                         DetailsCard(w)
                     }
                 }
@@ -232,7 +218,6 @@ fun WeatherApp(viewModel: WeatherViewModel) {
         }
     }
 }
-
 fun getBackground(condition: String): Int {
     return when {
         condition.contains("rain", true) -> R.drawable.rain

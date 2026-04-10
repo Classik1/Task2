@@ -22,10 +22,10 @@ class WeatherViewModel(
     val error: StateFlow<String?> = _error
     private val _city = MutableStateFlow("Taganrog")
     val city: StateFlow<String> = _city
-    fun init(context: Context) {
+    fun init() {
         viewModelScope.launch {
             val user = authRepository.currentUser
-            val startCity = user?.lastCity ?: "Taganrog"
+            val startCity = user?.lastCity ?: "Berlin"
 
             _city.value = startCity
             loadWeather(startCity)

@@ -10,7 +10,7 @@ object DatabaseProvider {
             WeatherDatabase::class.java,
             "weather_db"
         )
-            .fallbackToDestructiveMigration()
+            .fallbackToDestructiveMigration(true)
             .build()
     }
 }
