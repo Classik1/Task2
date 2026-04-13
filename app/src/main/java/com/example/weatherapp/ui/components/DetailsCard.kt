@@ -1,24 +1,27 @@
 package com.example.weatherapp.ui.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.weatherapp.R
 import com.example.weatherapp.data.model.WeatherData
-
-
+@SuppressLint("DefaultLocale")
 @Composable
 fun DetailsCard(weather: WeatherData) {
+
     Card(
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(
@@ -33,9 +36,23 @@ fun DetailsCard(weather: WeatherData) {
                 .padding(16.dp)
         ) {
 
-            Row(
-                modifier = Modifier.fillMaxWidth()
-            ) {
+            Text(
+                text = weather.city,
+                fontSize = 20.sp,
+                color = Color.White.copy(0.8f),
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+            Text(
+                text = "${weather.temperature}°",
+                fontSize = 48.sp,
+                fontWeight = FontWeight.Light,
+                color = Color.White,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(modifier = Modifier.fillMaxWidth()) {
                 DetailItem(
                     icon = "🌡️",
                     label = "Ощущается",
@@ -52,9 +69,7 @@ fun DetailsCard(weather: WeatherData) {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth()
-            ) {
+            Row(modifier = Modifier.fillMaxWidth()) {
                 DetailItem(
                     icon = "💨",
                     label = "Ветер",

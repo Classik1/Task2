@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -39,13 +40,16 @@ val citySuggestions = listOf(
 )
 
 @Composable
-fun WeatherApp(viewModel: WeatherViewModel) {
+fun WeatherApp(
+    viewModel: WeatherViewModel,
+    onDetailsClick: () -> Unit
+) {
 
-
+    val context = LocalContext.current
 
 
     LaunchedEffect(Unit) {
-        viewModel.init()
+        viewModel.init(context)
     }
 
     var searchQuery by remember { mutableStateOf("") }
@@ -101,7 +105,7 @@ fun WeatherApp(viewModel: WeatherViewModel) {
                         keyboardActions = KeyboardActions(
                             onSearch = {
                                 if (searchQuery.isNotBlank()) {
-                                    viewModel.searchCity(searchQuery)
+                                    viewModel.searchCity(searchQuery, context)
                                     searchQuery = ""
                                     isSearching = false
                                 }
@@ -143,7 +147,7 @@ fun WeatherApp(viewModel: WeatherViewModel) {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-                                    viewModel.searchCity(suggestion)
+                                    viewModel.searchCity(searchQuery, context)
                                     searchQuery = ""
                                     isSearching = false
                                 }
@@ -195,24 +199,30 @@ fun WeatherApp(viewModel: WeatherViewModel) {
                         Spacer(Modifier.height(8.dp))
                         Text(getCurrentDate(), color = Color.White.copy(0.6f))
                         Spacer(Modifier.height(16.dp))
-                        LazyRow {
-                            items(w.forecast) { day ->
-                                Column(
-                                    modifier = Modifier.padding(8.dp),
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    Text(day.date, color = Color.White)
-                                    WeatherIcon(day.condition)
-                                    Text(
-                                        "${day.maxTemp}°/${day.minTemp}°",
-                                        color = Color.White
-                                    )
-                                }
-                            }
-                        }
+//                        LazyRow {
+//                            items(w.forecast) { day ->
+//                                Column(
+//                                    modifier = Modifier.padding(8.dp),
+//                                    horizontalAlignment = Alignment.CenterHorizontally
+//                                ) {
+//                                    Text(day.date, color = Color.White)
+//                                    WeatherIcon(day.condition)
+//                                    Text(
+//                                        "${day.maxTemp}°/${day.minTemp}°",
+//                                        color = Color.White
+//                                    )
+//                                }
+//                            }
+//                        }
                         Spacer(Modifier.height(16.dp))
-                        DetailsCard(w)
+//                        DetailsCard(w)
                     }
+                }
+                Button(
+                    onClick = onDetailsClick,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Подробнее")
                 }
             }
         }

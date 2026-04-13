@@ -9,15 +9,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.weatherapp.utils.AuthPreferences
 import com.example.weatherapp.viewmodel.AuthViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
-fun LoginScreen(vm: AuthViewModel) {
+fun LoginScreen(
+    vm: AuthViewModel,
+    onSuccess: () -> Unit
+) {
 
+    val context = LocalContext.current
     var login by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var rememberMe by remember { mutableStateOf(false) }
@@ -95,13 +104,13 @@ fun LoginScreen(vm: AuthViewModel) {
                 Button(
                     onClick = {
                         loading = true
-                        vm.login(login, password, rememberMe)
-                        loading = false
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp),
-                    shape = RoundedCornerShape(12.dp)
+                        vm.login(login, password, rememberMe) { success ->
+                            loading = false
+                            if (success) {
+                                onSuccess()
+                            }
+                        }
+                    }
                 ) {
                     if (loading) {
                         CircularProgressIndicator(

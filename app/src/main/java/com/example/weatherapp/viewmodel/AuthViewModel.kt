@@ -16,9 +16,11 @@ class AuthViewModel(private val repo: AuthRepository) : ViewModel() {
             isAuthorized.value = repo.getSavedUser() != null
         }
     }
-    fun login(login: String, password: String, remember: Boolean) {
+    fun login(login: String, password: String, remember: Boolean, onResult: (Boolean) -> Unit) {
         viewModelScope.launch {
-            isAuthorized.value = repo.login(login, password, remember)
+            val result = repo.login(login, password, remember)
+            isAuthorized.value = result
+            onResult(result)
         }
     }
 }

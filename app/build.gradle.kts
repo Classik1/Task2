@@ -14,7 +14,7 @@ android {
 
 
     defaultConfig {
-        applicationId = "com.example.weather"
+        applicationId = "com.example.weatherapp"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

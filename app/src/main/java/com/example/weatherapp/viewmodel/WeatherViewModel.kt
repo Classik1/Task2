@@ -22,33 +22,30 @@ class WeatherViewModel(
     val error: StateFlow<String?> = _error
     private val _city = MutableStateFlow("Taganrog")
     val city: StateFlow<String> = _city
-    fun init() {
+    fun init(context: Context) {
         viewModelScope.launch {
-            val user = authRepository.currentUser
-            val startCity = user?.lastCity ?: "Berlin"
-
-            _city.value = startCity
-            loadWeather(startCity)
+            val lastCity = repository.getLastCity() ?: "Berlin"
+            _city.value = lastCity
+            loadWeather(lastCity, context)
         }
     }
 
-    fun searchCity(newCity: String) {
+    fun searchCity(newCity: String, context: Context) {
         viewModelScope.launch {
             _city.value = newCity
-            authRepository.saveCity(newCity)
-            loadWeather(newCity)
+            loadWeather(newCity, context)
         }
     }
 
-    private fun loadWeather(city: String) {
+    fun loadWeather(city: String, context: Context) {
         viewModelScope.launch {
             _loading.value = true
             _error.value = null
 
             try {
-                _weather.value = repository.getWeather(city)
+                _weather.value = repository.getWeather(city, context)
             } catch (e: Exception) {
-                _error.value = "Ошибка загрузки"
+                _error.value = "Нет данных"
             }
 
             _loading.value = false

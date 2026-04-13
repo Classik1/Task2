@@ -5,12 +5,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.*
 import com.example.weatherapp.data.AuthRepository
-import com.example.weatherapp.data.remote.RetrofitInstance
-import com.example.weatherapp.data.local.DatabaseProvider
 import com.example.weatherapp.data.WeatherRepository
+import com.example.weatherapp.data.local.DatabaseProvider
+import com.example.weatherapp.data.remote.RetrofitInstance
+import com.example.weatherapp.ui.DetailsScreen
 import com.example.weatherapp.ui.LoginScreen
 import com.example.weatherapp.ui.WeatherApp
+import com.example.weatherapp.utils.AuthPreferences
 import com.example.weatherapp.utils.Constants
 import com.example.weatherapp.viewmodel.AuthViewModel
 import com.example.weatherapp.viewmodel.AuthViewModelFactory
@@ -23,7 +26,7 @@ class MainActivity : ComponentActivity() {
 
         val db = DatabaseProvider.getDatabase(this)
 
-        val authRepo = AuthRepository(db.userDao())
+        val authRepo = AuthRepository(this)
         val weatherRepo = WeatherRepository(
             RetrofitInstance.api,
             db.weatherDao(),
@@ -32,6 +35,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
 
+            val navController = rememberNavController()
             val authVM: AuthViewModel = viewModel(
                 factory = AuthViewModelFactory(authRepo)
             )
@@ -41,13 +45,43 @@ class MainActivity : ComponentActivity() {
             )
 
             LaunchedEffect(Unit) {
-                authVM.checkAuth()
+                val savedLogin = AuthPreferences.getUser(this@MainActivity)
+                if (savedLogin != null) {
+                    authRepo.restoreUser(savedLogin)
+                    navController.navigate("weather") {
+                        popUpTo("login") { inclusive = true }
+                    }
+                }
             }
 
-            if (authVM.isAuthorized.value) {
-                WeatherApp(weatherVM)
-            } else {
-                LoginScreen(authVM)
+            NavHost(
+                navController = navController,
+                startDestination = "login"
+            ) {
+                composable("login") {
+                    LoginScreen(
+                        vm = authVM,
+                        onSuccess = {
+                            navController.navigate("weather") {
+                                popUpTo("login") { inclusive = true }
+                            }
+                        }
+                    )
+                }
+                composable("weather") {
+                    WeatherApp(
+                        viewModel = weatherVM,
+                        onDetailsClick = {
+                            navController.navigate("details")
+                        }
+                    )
+                }
+                composable("details") {
+                    DetailsScreen(
+                        vm = weatherVM,
+                        navController = navController
+                    )
+                }
             }
         }
     }

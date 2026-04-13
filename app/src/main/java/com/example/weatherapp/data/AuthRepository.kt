@@ -1,39 +1,30 @@
 package com.example.weatherapp.data
 
-import com.example.weatherapp.data.local.UserDao
-import com.example.weatherapp.data.local.UserEntity
+import android.content.Context
+import com.example.weatherapp.utils.AuthPreferences
 
-class AuthRepository(private val userDao: UserDao) {
+class AuthRepository(private val context: Context) {
 
-    var currentUser: UserEntity? = null
+    var currentUser: String? = null
         private set
 
     suspend fun login(login: String, password: String, remember: Boolean): Boolean {
-        val user = userDao.login(login, password)
+        currentUser = login
 
-        currentUser = if (user != null) {
-            val updated = user.copy(rememberMe = remember)
-            userDao.insert(updated)
-            updated
-        } else {
-            val newUser = UserEntity(login, password, remember)
-            userDao.insert(newUser)
-            newUser
+        if (remember) {
+            AuthPreferences.saveUser(context, login)
         }
 
         return true
     }
 
-    suspend fun getSavedUser(): UserEntity? {
-        val user = userDao.getRememberedUser()
+    suspend fun getSavedUser(): String? {
+        val user = AuthPreferences.getUser(context)
         currentUser = user
         return user
     }
 
-    suspend fun saveCity(city: String) {
-        currentUser?.let {
-            userDao.updateCity(it.login, city)
-            currentUser = it.copy(lastCity = city)
-        }
+    suspend fun restoreUser(login: String) {
+        currentUser = login
     }
 }
