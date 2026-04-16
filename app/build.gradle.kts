@@ -1,17 +1,15 @@
+import com.google.protobuf.gradle.proto
+
 plugins {
-    alias(libs.plugins.android.application)
+    id("com.android.application")
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.devtoolsKsp)
+    id("com.google.protobuf") version "0.9.6"
 }
 
 android {
     namespace = "com.example.weatherapp"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
-
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.weatherapp"
@@ -33,12 +31,17 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
 
     }
     buildFeatures {
         compose = true
+    }
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        }
     }
 }
 
@@ -69,7 +72,27 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     implementation(libs.retrofit)
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation(libs.converter.gson.v290)
     implementation(libs.play.services.location)
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.kotlinx.serialization.json)
+    implementation("androidx.datastore:datastore:1.1.2")
+    implementation("com.google.protobuf:protobuf-javalite:3.25.1")
+}
+
+protobuf {
+
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.25.1"
+    }
+
+    generateProtoTasks {
+        all().forEach { task ->
+            task.builtins {
+                create("java") {
+                    option("lite")
+                }
+            }
+        }
+    }
 }

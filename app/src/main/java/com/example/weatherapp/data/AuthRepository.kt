@@ -1,7 +1,7 @@
 package com.example.weatherapp.data
 
 import android.content.Context
-import com.example.weatherapp.utils.AuthPreferences
+import com.example.weatherapp.utils.UserDataStore
 
 class AuthRepository(private val context: Context) {
 
@@ -12,14 +12,14 @@ class AuthRepository(private val context: Context) {
         currentUser = login
 
         if (remember) {
-            AuthPreferences.saveUser(context, login)
+            UserDataStore.saveUser(context, login)
         }
 
         return true
     }
 
     suspend fun getSavedUser(): String? {
-        val user = AuthPreferences.getUser(context)
+        val user = UserDataStore.getUser(context)
         currentUser = user
         return user
     }

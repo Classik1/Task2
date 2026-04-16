@@ -41,13 +41,11 @@ class WeatherViewModel(
         viewModelScope.launch {
             _loading.value = true
             _error.value = null
-
             try {
                 _weather.value = repository.getWeather(city, context)
             } catch (e: Exception) {
                 _error.value = "Нет данных"
             }
-
             _loading.value = false
         }
     }

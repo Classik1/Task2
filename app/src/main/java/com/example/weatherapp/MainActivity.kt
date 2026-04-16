@@ -13,8 +13,8 @@ import com.example.weatherapp.data.remote.RetrofitInstance
 import com.example.weatherapp.ui.DetailsScreen
 import com.example.weatherapp.ui.LoginScreen
 import com.example.weatherapp.ui.WeatherApp
-import com.example.weatherapp.utils.AuthPreferences
 import com.example.weatherapp.utils.Constants
+import com.example.weatherapp.utils.UserDataStore
 import com.example.weatherapp.viewmodel.AuthViewModel
 import com.example.weatherapp.viewmodel.AuthViewModelFactory
 import com.example.weatherapp.viewmodel.WeatherViewModel
@@ -25,7 +25,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val db = DatabaseProvider.getDatabase(this)
-
         val authRepo = AuthRepository(this)
         val weatherRepo = WeatherRepository(
             RetrofitInstance.api,
@@ -45,7 +44,7 @@ class MainActivity : ComponentActivity() {
             )
 
             LaunchedEffect(Unit) {
-                val savedLogin = AuthPreferences.getUser(this@MainActivity)
+                val savedLogin = UserDataStore.getUser(this@MainActivity)
                 if (savedLogin != null) {
                     authRepo.restoreUser(savedLogin)
                     navController.navigate("weather") {
@@ -53,7 +52,6 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
-
             NavHost(
                 navController = navController,
                 startDestination = "login"

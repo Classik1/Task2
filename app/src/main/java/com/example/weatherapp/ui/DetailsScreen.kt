@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -19,9 +20,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.weatherapp.R
 import com.example.weatherapp.ui.components.WeatherIcon
 import com.example.weatherapp.viewmodel.WeatherViewModel
+
 
 @Composable
 fun DetailsScreen(
@@ -49,6 +50,7 @@ fun DetailsScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .statusBarsPadding()
+                    .padding(WindowInsets.systemBars.asPaddingValues())
                     .padding(16.dp)
             ) {
                 Row(
@@ -56,7 +58,7 @@ fun DetailsScreen(
                 ) {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
-                            Icons.Default.ArrowBack,
+                            Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = null,
                             tint = Color.White
                         )
@@ -99,7 +101,7 @@ fun DetailsScreen(
                         containerColor = Color.White.copy(0.1f)
                     )
                 ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
+                    Column(modifier = Modifier.padding(16.dp)){
 
                         DetailRow("Ощущается", "${w.feelsLike}°")
                         DetailRow("Влажность", "${w.humidity}%")
