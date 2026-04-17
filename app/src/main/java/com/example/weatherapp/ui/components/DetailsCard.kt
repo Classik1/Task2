@@ -17,7 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherapp.R
-import com.example.weatherapp.data.model.WeatherData
+import com.example.repository.WeatherData
 @SuppressLint("DefaultLocale")
 @Composable
 fun DetailsCard(weather: WeatherData) {
