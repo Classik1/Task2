@@ -6,19 +6,19 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.*
-import com.example.weatherapp.data.AuthRepository
-import com.example.weatherapp.data.WeatherRepository
-import com.example.weatherapp.data.local.DatabaseProvider
-import com.example.weatherapp.data.remote.RetrofitInstance
-import com.example.weatherapp.ui.DetailsScreen
-import com.example.weatherapp.ui.LoginScreen
-import com.example.weatherapp.ui.WeatherApp
-import com.example.weatherapp.utils.Constants
-import com.example.weatherapp.utils.UserDataStore
-import com.example.weatherapp.viewmodel.AuthViewModel
-import com.example.weatherapp.viewmodel.AuthViewModelFactory
-import com.example.weatherapp.viewmodel.WeatherViewModel
-import com.example.weatherapp.viewmodel.WeatherViewModelFactory
+import com.example.auth.AuthViewModel
+import com.example.auth.AuthViewModelFactory
+import com.example.weatherapp.proto.LoginScreen
+import com.example.local.DatabaseProvider
+import com.example.remote.RetrofitInstance
+import com.example.weatherapp.proto.AuthRepository
+import com.example.repository.WeatherRepository
+import com.example.utils.Constants
+import com.example.weather.DetailsScreen
+import com.example.weather.WeatherApp
+import com.example.weather.WeatherViewModel
+import com.example.weather.WeatherViewModelFactory
+import com.example.auth.UserDataStore
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
