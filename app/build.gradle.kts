@@ -74,10 +74,15 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.gson.v290)
     implementation(libs.play.services.location)
+    //proto_data_store
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.kotlinx.serialization.json)
     implementation("androidx.datastore:datastore:1.1.2")
     implementation("com.google.protobuf:protobuf-javalite:3.25.1")
+    //password_show
+    implementation(platform("androidx.compose:compose-bom:2026.03.00"))
+    implementation("androidx.compose.material3:material3")
+    implementation ("androidx.compose.material:material-icons-extended")
 }
 
 protobuf {

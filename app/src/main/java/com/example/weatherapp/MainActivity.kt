@@ -45,11 +45,9 @@ class MainActivity : ComponentActivity() {
 
             LaunchedEffect(Unit) {
                 val savedLogin = UserDataStore.getUser(this@MainActivity)
-                if (savedLogin != null) {
-                    authRepo.restoreUser(savedLogin)
-                    navController.navigate("weather") {
-                        popUpTo("login") { inclusive = true }
-                    }
+                authRepo.restoreUser(savedLogin)
+                navController.navigate("weather") {
+                    popUpTo("login") { inclusive = true }
                 }
             }
             NavHost(
@@ -66,14 +64,21 @@ class MainActivity : ComponentActivity() {
                         }
                     )
                 }
+
                 composable("weather") {
                     WeatherApp(
                         viewModel = weatherVM,
                         onDetailsClick = {
                             navController.navigate("details")
+                        },
+                        onLogout = {
+                            navController.navigate("login") {
+                                popUpTo(0) { inclusive = true }
+                            }
                         }
                     )
                 }
+
                 composable("details") {
                     DetailsScreen(
                         vm = weatherVM,

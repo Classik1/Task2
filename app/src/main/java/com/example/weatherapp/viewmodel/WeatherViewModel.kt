@@ -49,4 +49,11 @@ class WeatherViewModel(
             _loading.value = false
         }
     }
+
+    fun logout(onLogoutFinished: () -> Unit) {
+        viewModelScope.launch {
+            authRepository.clearSession()
+            onLogoutFinished()
+        }
+    }
 }

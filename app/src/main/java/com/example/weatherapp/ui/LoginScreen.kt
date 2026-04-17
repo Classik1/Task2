@@ -1,8 +1,17 @@
 package com.example.weatherapp.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicSecureTextField
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.TextObfuscationMode
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -30,7 +39,7 @@ fun LoginScreen(
     var password by remember { mutableStateOf("") }
     var rememberMe by remember { mutableStateOf(false) }
     var loading by remember { mutableStateOf(false) }
-    var showPassword by remember { mutableStateOf(false) }
+    val passwordState = remember { TextFieldState() }
 
     Box(
         modifier = Modifier
@@ -61,40 +70,34 @@ fun LoginScreen(
                     color = Color.White
                 )
                 Spacer(Modifier.height(20.dp))
+
                 TextField(
                     value = login,
                     onValueChange = { login = it },
                     label = { Text("Login") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
+                        .padding(6.dp)
+                        .border(1.dp, Color.LightGray, RoundedCornerShape(6.dp))
+                        .padding(6.dp)
                 )
+
                 Spacer(Modifier.height(12.dp))
-                TextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    label = { Text("Password") },
-                    singleLine = true,
-                    visualTransformation =
-                        if (showPassword) VisualTransformation.None
-                        else PasswordVisualTransformation(),
-                    modifier = Modifier.fillMaxWidth(),
-                    trailingIcon = {
-                        TextButton(onClick = { showPassword = !showPassword }) {
-                            Text(if (showPassword) "Hide" else "Show")
-                        }
-                    }
-                )
+                PasswordTextField(state = passwordState)
 
                 Spacer(Modifier.height(12.dp))
 
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { rememberMe = !rememberMe },
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Checkbox(
                         checked = rememberMe,
-                        onCheckedChange = { rememberMe = it }
+                        onCheckedChange = null
                     )
+                    Spacer(Modifier.width(12.dp))
                     Text("Запомнить меня", color = Color.White)
                 }
 
@@ -102,6 +105,7 @@ fun LoginScreen(
 
                 Button(
                     onClick = {
+                        password = passwordState.text.toString()
                         loading = true
                         vm.login(login, password, rememberMe) { success ->
                             loading = false
@@ -124,4 +128,50 @@ fun LoginScreen(
             }
         }
     }
+}
+
+
+
+// https://developer.android.com/develop/ui/compose/quick-guides/content/show-hide-password <- password hide with Android Developers
+@Composable
+fun PasswordTextField(state: TextFieldState) {
+    val state = remember { TextFieldState() }
+    var showPassword by remember { mutableStateOf(false) }
+    BasicSecureTextField(
+        state = state,
+        textObfuscationMode =
+            if (showPassword) {
+                TextObfuscationMode.Visible
+            } else {
+                TextObfuscationMode.RevealLastTyped
+            },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(6.dp)
+            .border(1.dp, Color.LightGray, RoundedCornerShape(6.dp))
+            .padding(6.dp),
+        decorator = { innerTextField ->
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .padding(start = 16.dp, end = 48.dp)
+                ) {
+                    innerTextField()
+                }
+                Icon(
+                    if (showPassword) {
+                        Icons.Filled.Visibility
+                    } else {
+                        Icons.Filled.VisibilityOff
+                    },
+                    contentDescription = "Toggle password visibility",
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .requiredSize(48.dp).padding(16.dp)
+                        .clickable { showPassword = !showPassword }
+                )
+            }
+        }
+    )
 }

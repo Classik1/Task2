@@ -3,21 +3,12 @@ package com.example.weatherapp.utils
 import android.content.Context
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.datastore.preferences.preferencesDataStoreFile
+import com.example.weatherapp.UserPreferences
 import com.example.weatherapp.data.userDataStore
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-
-//object AuthPreferences {
-//    private val Context.dataStore by preferencesDataStore("auth")
-//    private val LOGIN = stringPreferencesKey("login")
-//    suspend fun saveUser(context: Context, login: String) {
-//        context.dataStore.edit {
-//            it[LOGIN] = login
-//        }
-//    }
-//    suspend fun getUser(context: Context): String? {
-//        return context.dataStore.data.first()[LOGIN]
-//    }
-//}
+import kotlinx.coroutines.flow.map
 
 object UserDataStore {
     suspend fun saveUser(context: Context, login: String) {
@@ -26,7 +17,11 @@ object UserDataStore {
         }
     }
 
-    suspend fun getUser(context: Context): String? {
-        return null
+    suspend fun getUser(context: Context): String {
+        return context.userDataStore.data.map { it.login }.first()
+    }
+
+    suspend fun clearUser(context: Context): UserPreferences {
+        return context.userDataStore.updateData { it.toBuilder().clearLogin().build() }
     }
 }

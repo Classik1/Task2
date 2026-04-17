@@ -27,4 +27,8 @@ class AuthRepository(private val context: Context) {
     suspend fun restoreUser(login: String) {
         currentUser = login
     }
+    suspend fun clearSession() {
+        currentUser = null
+        UserDataStore.clearUser(context)
+    }
 }

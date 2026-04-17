@@ -27,10 +27,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.rememberNavController
 import com.example.weatherapp.R
 import com.example.weatherapp.ui.components.DetailsCard
 import com.example.weatherapp.ui.components.WeatherIcon
 import com.example.weatherapp.utils.getCurrentDate
+import com.example.weatherapp.viewmodel.AuthViewModel
 import com.example.weatherapp.viewmodel.WeatherViewModel
 
 val citySuggestions = listOf(
@@ -42,11 +44,12 @@ val citySuggestions = listOf(
 @Composable
 fun WeatherApp(
     viewModel: WeatherViewModel,
-    onDetailsClick: () -> Unit
+    onLogout: () -> Unit,
+    onDetailsClick: () -> Unit,
+
 ) {
 
     val context = LocalContext.current
-
 
     LaunchedEffect(Unit) {
         viewModel.init(context)
@@ -199,23 +202,7 @@ fun WeatherApp(
                         Spacer(Modifier.height(8.dp))
                         Text(getCurrentDate(), color = Color.White.copy(0.6f))
                         Spacer(Modifier.height(16.dp))
-//                        LazyRow {
-//                            items(w.forecast) { day ->
-//                                Column(
-//                                    modifier = Modifier.padding(8.dp),
-//                                    horizontalAlignment = Alignment.CenterHorizontally
-//                                ) {
-//                                    Text(day.date, color = Color.White)
-//                                    WeatherIcon(day.condition)
-//                                    Text(
-//                                        "${day.maxTemp}°/${day.minTemp}°",
-//                                        color = Color.White
-//                                    )
-//                                }
-//                            }
-//                        }
-                        Spacer(Modifier.height(16.dp))
-//                        DetailsCard(w)
+
                     }
                 }
                 Button(
@@ -223,6 +210,15 @@ fun WeatherApp(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("Подробнее")
+                }
+                Button(
+                    onClick = { viewModel.logout {
+                        onLogout()
+                    }
+                              },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Log Out")
                 }
             }
         }

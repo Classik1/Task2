@@ -3,6 +3,7 @@ package com.example.weatherapp.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -15,8 +16,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -75,7 +78,8 @@ fun DetailsScreen(
                     w.city,
                     fontSize = 28.sp,
                     color = Color.White,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+
                 )
 
                 Spacer(Modifier.height(8.dp))
@@ -89,10 +93,10 @@ fun DetailsScreen(
                     fontWeight = FontWeight.Light
                 )
 
-                Text(
-                    w.condition,
-                    color = Color.White.copy(0.8f)
-                )
+//                Text(
+//                    w.condition,
+//                    color = Color.White.copy(0.8f)
+//                )
 
                 Spacer(Modifier.height(16.dp))
                 Card(
@@ -111,14 +115,12 @@ fun DetailsScreen(
                 }
 
                 Spacer(Modifier.height(16.dp))
-
                 Text(
                     "Прогноз на неделю",
                     color = Color.White,
-                    fontSize = 18.sp
+                    fontSize = 24.sp
                 )
-
-                Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.height(16.dp))
 
                 LazyColumn {
                     items(w.forecast) { day ->
