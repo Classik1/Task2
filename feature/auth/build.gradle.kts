@@ -76,5 +76,5 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
 
-//    implementation(project(":app"))
+    implementation(project(":core:utils"))
 }

@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-option java_package = "com.example.weatherapp";
+option java_package = "com.example.utils";
 option java_multiple_files = true;
 
-message UserPreferences {
+message UserPreferences1 {
   string login = 1;
 }

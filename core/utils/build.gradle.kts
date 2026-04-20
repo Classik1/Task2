@@ -1,3 +1,5 @@
+import com.google.protobuf.gradle.proto
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.devtoolsKsp)
@@ -8,6 +10,14 @@ android {
     namespace = "com.example.utils"
     compileSdk {
         version = release(36)
+    }
+
+    sourceSets {
+        getByName("main") {
+            proto {
+                srcDir("src/main/proto")
+            }
+        }
     }
 
     defaultConfig {
@@ -40,6 +50,12 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    implementation(project(":data:repository"))
+    implementation(project(":data:remote"))
+    implementation(project(":data:local"))
 
 //    proto_data_store
     implementation(libs.androidx.datastore.preferences)

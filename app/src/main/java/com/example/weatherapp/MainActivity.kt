@@ -6,19 +6,20 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.*
+import com.example.auth.AuthRepository
 import com.example.auth.AuthViewModel
 import com.example.auth.AuthViewModelFactory
-import com.example.weatherapp.proto.LoginScreen
+import com.example.auth.LoginScreen
+import com.example.auth.UserDataStore
 import com.example.local.DatabaseProvider
 import com.example.remote.RetrofitInstance
-import com.example.weatherapp.proto.AuthRepository
 import com.example.repository.WeatherRepository
 import com.example.utils.Constants
 import com.example.weather.DetailsScreen
 import com.example.weather.WeatherApp
 import com.example.weather.WeatherViewModel
 import com.example.weather.WeatherViewModelFactory
-import com.example.auth.UserDataStore
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

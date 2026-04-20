@@ -1,8 +1,8 @@
-package com.example.weatherapp.proto
+package com.example.auth
 
 import android.content.Context
-import androidx.datastore.preferences.core.*
-import com.example.weatherapp.UserPreferences
+import com.example.utils.UserPreferences1
+import com.example.utils.userDataStore
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
@@ -17,7 +17,7 @@ object UserDataStore {
         return context.userDataStore.data.map { it.login }.first()
     }
 
-    suspend fun clearUser(context: Context): UserPreferences {
+    suspend fun clearUser(context: Context): UserPreferences1 {
         return context.userDataStore.updateData { it.toBuilder().clearLogin().build() }
     }
 }
