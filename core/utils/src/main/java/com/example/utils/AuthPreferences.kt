@@ -1,4 +1,4 @@
-package com.example.auth
+package com.example.utils
 
 import android.content.Context
 import com.example.utils.UserPreferences1

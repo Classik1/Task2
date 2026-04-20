@@ -74,6 +74,7 @@ dependencies {
     implementation(project(":data:remote"))
     implementation(project(":data:local"))
     implementation(project(":core:utils"))
+    
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
 

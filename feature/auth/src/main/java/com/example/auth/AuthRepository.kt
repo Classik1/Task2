@@ -1,6 +1,7 @@
 package com.example.auth
 
 import android.content.Context
+import com.example.utils.UserDataStore
 
 class AuthRepository(private val context: Context) {
 
@@ -17,7 +18,7 @@ class AuthRepository(private val context: Context) {
         return true
     }
 
-    suspend fun getSavedUser(): String? {
+    suspend fun getSavedUser(): String {
         val user = UserDataStore.getUser(context)
         currentUser = user
         return user

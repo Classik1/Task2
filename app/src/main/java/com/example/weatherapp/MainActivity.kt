@@ -10,11 +10,11 @@ import com.example.auth.AuthRepository
 import com.example.auth.AuthViewModel
 import com.example.auth.AuthViewModelFactory
 import com.example.auth.LoginScreen
-import com.example.auth.UserDataStore
 import com.example.local.DatabaseProvider
 import com.example.remote.RetrofitInstance
 import com.example.repository.WeatherRepository
 import com.example.utils.Constants
+import com.example.utils.UserDataStore
 import com.example.weather.DetailsScreen
 import com.example.weather.WeatherApp
 import com.example.weather.WeatherViewModel
