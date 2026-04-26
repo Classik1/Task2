@@ -1,0 +1,26 @@
+package com.example.weatherapp
+
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.weatherapp.AuthRepository
+import kotlinx.coroutines.launch
+
+class AuthViewModel(private val repo: AuthRepository) : ViewModel() {
+
+    var isAuthorized = mutableStateOf(false)
+        private set
+
+    fun checkAuth() {
+        viewModelScope.launch {
+            isAuthorized.value = repo.getSavedUser() != null
+        }
+    }
+    fun login(login: String, password: String, remember: Boolean, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            val result = repo.login(login, password, remember)
+            isAuthorized.value = result
+            onResult(result)
+        }
+    }
+}

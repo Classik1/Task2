@@ -68,13 +68,10 @@ dependencies {
     implementation(platform("androidx.compose:compose-bom:2026.03.00"))
     implementation("androidx.compose.material3:material3")
     implementation ("androidx.compose.material:material-icons-extended")
-    implementation(project(":feature:weather"))
-    implementation(project(":feature:auth"))
-    implementation(project(":data:repository"))
-    implementation(project(":data:remote"))
-    implementation(project(":data:local"))
-    implementation(project(":core:utils"))
-    
+    implementation(project(":api"))
+    implementation(project(":business"))
+
+
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
 

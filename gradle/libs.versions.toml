@@ -18,6 +18,7 @@ lifecycleViewmodelKtx = "2.10.0"
 picasso = "2.71828"
 playServicesLocation = "21.3.0"
 retrofit = "3.0.0"
+retrofitVersion = "2.9.0"
 roomRuntime = "2.8.4"
 runtimeLivedata = "1.10.5"
 ksp = "2.3.2"
@@ -37,6 +38,8 @@ material = "1.10.0"
 datastoreCore = "1.2.1"
 generativeai = "0.9.0"
 foundationLayout = "1.10.6"
+jetbrainsKotlinJvm = "2.3.20"
+annotationJvm = "1.10.0"
 
 [libraries]
 androidx-activity-compose-v180 = { module = "androidx.activity:activity-compose", version.ref = "activityComposeVersion" }
@@ -73,6 +76,7 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 picasso = { module = "com.squareup.picasso:picasso", version.ref = "picasso" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+retrofit-v290 = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofitVersion" }
 spots-dialog = { module = "com.github.d-max:spots-dialog", version.ref = "spotsDialog" }
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
 google_protobuf_java   = { module = "com.google.protobuf:protobuf-javalite", version.ref = "google_protobuf" }
@@ -86,6 +90,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-datastore-core = { group = "androidx.datastore", name = "datastore-core", version.ref = "datastoreCore" }
 generativeai = { group = "com.google.ai.client.generativeai", name = "generativeai", version.ref = "generativeai" }
 androidx-compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayout" }
+androidx-annotation-jvm = { group = "androidx.annotation", name = "annotation-jvm", version.ref = "annotationJvm" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -94,6 +99,7 @@ devtoolsKsp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
 google-protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android_library        = { id = "com.android.library", version.ref = "android_gradle_plugin" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 
 [bundles]
 google_protobuf        = ["google_protobuf_java", "google_protobuf_kotlin" ]

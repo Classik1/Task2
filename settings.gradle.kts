@@ -24,9 +24,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "Zametki"
 include(":app")
-include(":feature:weather")
-include(":feature:auth")
-include(":data:repository")
-include(":data:remote")
-include(":data:local")
-include(":core:utils")
+include(":api")
+include(":business")
+include(":database")
+include(":database")
