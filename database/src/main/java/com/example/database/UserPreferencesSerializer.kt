@@ -2,28 +2,28 @@ package com.example.database
 
 import android.content.Context
 import androidx.datastore.core.DataStore
+import androidx.datastore.core.Serializer
 import androidx.datastore.dataStore
-import kotlinx.serialization.Serializer
 import java.io.InputStream
 import java.io.OutputStream
 
-object UserPreferencesSerializer: Serializer<UserPreferences1> {
+object UserPreferencesSerializer: Serializer<UserPref> {
     override val defaultValue:
-            UserPreferences1 = UserPreferences1.getDefaultInstance()
-    override suspend fun readFrom(input: InputStream): UserPreferences1 {
+            UserPref = UserPref.getDefaultInstance()
+    override suspend fun readFrom(input: InputStream): UserPref {
         return try {
-            UserPreferences1.parseFrom(input)
+            UserPref.parseFrom(input)
         } catch (exception: Exception) {
             defaultValue
         }
     }
 
-    override suspend fun writeTo(t: UserPreferences1, output: OutputStream){
+    override suspend fun writeTo(t: UserPref, output: OutputStream){
         t.writeTo(output)
     }
 }
 
-val Context.userDataStore: DataStore<UserPreferences1> by dataStore(
+val Context.userDataStore: DataStore<UserPref> by dataStore(
     fileName = "user.pb",
     serializer = UserPreferencesSerializer
 )

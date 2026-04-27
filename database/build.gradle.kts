@@ -1,12 +1,22 @@
+import com.google.protobuf.gradle.proto
+
 plugins {
     alias(libs.plugins.android.library)
-    id("com.google.protobuf")
-    id("com.google.devtools.ksp")  // вместо kotlin-kapt
+    alias(libs.plugins.devtoolsKsp)
+    alias(libs.plugins.google.protobuf)
 }
 
 android {
     namespace = "com.example.database"
     compileSdk = 34
+
+    sourceSets {
+        getByName("main") {
+            proto {
+                srcDir("src/main/proto")
+            }
+        }
+    }
 
     defaultConfig {
         minSdk = 24
@@ -14,29 +24,56 @@ android {
         consumerProguardFiles("consumer-rules.pro")
     }
 
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
 
+//    kotlinOptions {
+//        jvmTarget = "11"
+//    }
 }
 
 dependencies {
-    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
-    implementation(libs.material)
+    implementation("androidx.datastore:datastore-preferences:1.2.1")
+    implementation("androidx.datastore:datastore-preferences-core:1.2.1")
+    implementation("androidx.datastore:datastore:1.2.1")
+    implementation("androidx.datastore:datastore-core:1.2.1")
+    implementation("com.google.protobuf:protobuf-javalite:3.25.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 
-    // DataStore
-    implementation("androidx.datastore:datastore:1.1.2")
-    implementation("com.google.protobuf:protobuf-javalite:3.25.5")
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.room.compiler)
+}
 
-    // Room with KSP (instead of kapt)
-    implementation("androidx.room:room-runtime:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.25.1"
+    }
 
-    // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    generateProtoTasks {
+        all().forEach { task ->
+            task.builtins {
+                create("java") {
+                    option("lite")
+                }
+            }
+        }
+    }
 }

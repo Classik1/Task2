@@ -1,7 +1,9 @@
 package com.example.database
 
 import android.content.Context
-import com.example.weatherapp.userDataStore
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+
 
 object UserDataStore {
     suspend fun saveUser(context: Context, login: String) {
@@ -14,7 +16,7 @@ object UserDataStore {
         return context.userDataStore.data.map { it.login }.first()
     }
 
-    suspend fun clearUser(context: Context): UserPreferences1 {
+    suspend fun clearUser(context: Context): UserPref {
         return context.userDataStore.updateData { it.toBuilder().clearLogin().build() }
     }
 }

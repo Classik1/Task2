@@ -1,4 +1,4 @@
-package com.example.business
+package com.example.buisness
 
 data class ForecastItem(
     val date: String,

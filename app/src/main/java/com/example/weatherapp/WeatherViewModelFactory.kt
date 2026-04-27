@@ -2,8 +2,6 @@ package com.example.weatherapp
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.weatherapp.AuthRepository
-import com.example.weatherapp.WeatherRepository
 
 class WeatherViewModelFactory(
     private val repository: WeatherRepository,

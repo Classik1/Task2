@@ -24,7 +24,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "Zametki"
 include(":app")
+include(":database")
 include(":api")
-include(":business")
-include(":database")
-include(":database")
+include(":buisness")

@@ -1,4 +1,4 @@
-package com.example.business
+package com.example.buisness
 
 data class WeatherData(
     val city: String,

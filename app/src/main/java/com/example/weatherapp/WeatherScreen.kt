@@ -26,7 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.weatherapp.database.getCurrentDate
+import com.example.database.getCurrentDate
 
 val citySuggestions = listOf(
     "Berlin", "Munich", "Hamburg", "Frankfurt",

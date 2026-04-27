@@ -3,9 +3,7 @@ package com.example.weatherapp
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.weatherapp.AuthRepository
-import com.example.business.WeatherData
-import com.example.weatherapp.WeatherRepository
+import com.example.buisness.WeatherData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

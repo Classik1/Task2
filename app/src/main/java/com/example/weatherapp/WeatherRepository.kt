@@ -6,10 +6,10 @@ import android.content.Context
 import androidx.annotation.RequiresPermission
 import com.example.api.WeatherApi
 import com.example.api.WeatherResponse
-import com.example.business.ForecastItem
-import com.example.business.WeatherData
-import com.example.weatherapp.database.WeatherDao
-import com.example.weatherapp.database.WeatherEntity
+import com.example.buisness.ForecastItem
+import com.example.buisness.WeatherData
+import com.example.database.WeatherDao
+import com.example.database.WeatherEntity
 
 class WeatherRepository(
     private val api: WeatherApi,
