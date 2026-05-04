@@ -7,7 +7,9 @@ android {
     compileSdk {
         version = release(36)
     }
-
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
     defaultConfig {
         minSdk = 24
 
@@ -40,6 +42,10 @@ dependencies {
 
     implementation (libs.retrofit.v290)
     implementation (libs.converter.gson)
+
+    testImplementation(libs.mockk)
+    testImplementation(libs.mockwebserver)
+    testImplementation(libs.kotlin.test)
 
 
 }
